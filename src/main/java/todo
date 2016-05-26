@@ -1,0 +1,6 @@
+Todo:
+- Serialize partially: BenchmarkInput etc.
+- Setup RouteRequest
+- Complete routing. -> duplicate the RouteRequest class in SCALA version.
+
+
