@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class HttpService {
     public static void main(String args[]) throws IOException {
-        ServerSocket server = new ServerSocket(9000);
+        ServerSocket server = new ServerSocket(9000, 50000);
         Monitor.getInstance();
         Database database = new Database();
 

@@ -28,6 +28,16 @@
             <version>2.7.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org</groupId>
+            <artifactId>jfugue</artifactId>
+            <version>5.0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations-java5</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -45,7 +55,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.testing.HttpService</mainClass>
+                                    <mainClass>com.service.HttpService</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -54,5 +64,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

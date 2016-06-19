@@ -20,7 +20,10 @@ public class Database {
 
     public Database() {
         try{
-            mongoClient = new MongoClient("localhost", 27017);
+            MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+            builder.connectionsPerHost(40000);
+            MongoClientOptions options = builder.build();
+            mongoClient = new MongoClient("localhost", options);
             db = mongoClient.getDatabase("Bk_Java");
             col = db.getCollection("Events", BasicDBObject.class);
 
@@ -51,6 +54,16 @@ public class Database {
         }
     }
 
+    public Boolean resetDatabase() {
+        try {
+            col.drop();
+            return true;
+        } catch(Exception e) {
+            System.err.println("Error reset database: " + e);
+            return false;
+        }
+    }
+
     public Long getSpaceStats(int spaceId) {
         try {
             BasicDBObject getCreatedEvents = new BasicDBObject("spaceId", spaceId).append("eventType", 1);
@@ -70,3 +83,28 @@ public class Database {
         return col.count(getLikes) - col.count(getUnlikes);
     }
 }
+
+
+
+/*
+
+Benchmark {
+  technologyStack: String = Java
+  prototype:String = Bk_Java
+  timestampStart: Long
+  benchmarkDuration: Int
+  queryBenchmarks: {
+    queryBenchmark: {
+
+    }
+  }
+}
+
+
+
+
+ */
+
+
+
+

@@ -8,15 +8,13 @@ import java.util.ArrayList;
 
 import com.db.Database;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.routeHelpers.RouteRequest;
-import com.routeHelpers.dataTypes.BenchmarkInput;
 import com.routeHelpers.dataTypes.EventData;
 import com.routeHelpers.dataTypes.MessageData;
 import com.routeHelpers.dataTypes.SpaceData;
-import com.sun.deploy.net.HttpResponse;
+import com.audio.PlaySound;
 
 /**
  * Created by a623557 on 23-5-2016.
@@ -28,10 +26,12 @@ public class Routes implements Runnable {
     Database database;
     ObjectMapper mapper = new ObjectMapper();
 
-
+    /*
+        JMX
+     */
     public void route(String[] data) throws IOException {
         String json = data[1];
-        if (checkRoute(data[0], new String[]{"POST", "ig_java", "insert"})) {
+        if (checkRoute(data[0], new String[]{"POST", "bk_java", "insert"})) {
             EventData event = mapper.readValue(json, EventData.class);
 
             if (database.insertEvent(event))
@@ -39,15 +39,15 @@ public class Routes implements Runnable {
             else
                 respond("500", "Event could not be added.");
 
-        } else if(checkRoute(data[0], new String[]{"POST", "ig_java", "spaceStatistics"})) {
+        } else if(checkRoute(data[0], new String[]{"POST", "bk_java", "spaceStatistics"})) {
             SpaceData space = mapper.readValue(json, SpaceData.class);
-            Long spaceStats = database.getSpaceStats(space.spaceId);
+            Long spaceStats = database.getSpaceStats(space.getSpaceId());
 
             if (spaceStats != null)
                 new RouteRequest(json, "spaceStatistics", clientSocket, spaceStats.toString());
             else
                 respond("500", "Could not get or find space statistics.");
-        } else if(checkRoute(data[0], new String[]{"POST", "ig_java", "messageStatistics"})) {
+        } else if(checkRoute(data[0], new String[]{"POST", "bk_java", "messageStatistics"})) {
             MessageData message = mapper.readValue(json, MessageData.class);
             Long messageStats = database.getMessageStats(message.messageId);
 
@@ -59,6 +59,8 @@ public class Routes implements Runnable {
             respond("404", "Did not find that command.");
             System.err.println("Did not recognize socket: "+data[0] + " - " + json);
         }
+
+        //PlaySound.getInstance("1").play();
         clientSocket.close();
     }
 

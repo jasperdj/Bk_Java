@@ -41,6 +41,7 @@ public class Monitor implements Runnable {
         try {
             Matcher cpuMatcher = Pattern.compile("%Cpu\\(s\\): +(\\d+\\.\\d+) us, +(\\d+\\.\\d+)").matcher(topResult);
             cpuMatcher.find();
+            cpuMatcher.find();
             Double latestUserCpuLoad = Double.parseDouble(cpuMatcher.group(1));
             Double latestSystemCpuLoad = Double.parseDouble(cpuMatcher.group(2));
             latestCpuLoad = latestUserCpuLoad + latestSystemCpuLoad;
@@ -48,8 +49,6 @@ public class Monitor implements Runnable {
             Matcher ramMatcher = Pattern.compile("KiB Mem: +(\\d+) total, +(\\d+)").matcher(topResult);
             ramMatcher.find();
             latestRamUsed = Double.parseDouble(ramMatcher.group(2));
-
-            System.out.println("Top results : " + latestCpuLoad + " - " + latestRamUsed);
         } catch (Exception e) {
             System.out.println("Error #4 " + e);
         }
@@ -62,7 +61,6 @@ public class Monitor implements Runnable {
         Runnable periodicTask = new Runnable() {
             public void run() {
                 try {
-                    System.out.println("result 1");
                     Process getResourceUtil = Runtime.getRuntime().exec("top -bn2");
                     BufferedReader reader =
                             new BufferedReader(new InputStreamReader(getResourceUtil.getInputStream()));
@@ -72,9 +70,10 @@ public class Monitor implements Runnable {
                     while ( (line = reader.readLine()) != null) {
                         topResult.append(line);
                     }
-                    System.out.println("result 2");
-                    processTopResult(topResult.toString());
 
+                    processTopResult(topResult.toString());
+                    reader.close();
+                    getResourceUtil.destroy();
                 } catch (IOException e) {
                     System.err.println("Error #2: " + e);
                 }

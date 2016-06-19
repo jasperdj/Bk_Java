@@ -16,7 +16,10 @@ import java.util.Map;
 
 /**
  * Created by a623557 on 25-5-2016.
+ *
  */
+
+// USE PUT TO ADD t1, t2, t3 FOR LESS CODE!!!!!!!!!!!!!!!
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RouteRequest {
@@ -44,6 +47,8 @@ public class RouteRequest {
                     new BenchmarkOutput(currentLoad, fillAndCreateUnitPerformance(t1, t2, t3))));
 
             respond("200", response);
+
+
         } catch(Exception e) {
             System.err.println("Route request error: " + e);
             respond("500", "Internal server error");
