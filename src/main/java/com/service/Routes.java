@@ -64,9 +64,9 @@ public class Routes implements Runnable {
         clientSocket.close();
     }
 
-    public Routes(Socket clientSocket, Database database) {
+    public Routes(Socket clientSocket) {
         this.clientSocket = clientSocket;
-        this.database = database;
+        this.database = Database.getInstance();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 

@@ -17,8 +17,14 @@ public class Database {
     MongoClient mongoClient;
     MongoDatabase db;
     MongoCollection<BasicDBObject> col;
+    private static Database database;
 
-    public Database() {
+    public static Database getInstance() {
+        if (database == null) database = new Database();
+        return database;
+    }
+
+    protected Database() {
         try{
             MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
             builder.connectionsPerHost(40000);

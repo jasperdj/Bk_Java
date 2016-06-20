@@ -21,8 +21,8 @@ import static java.lang.Math.toIntExact;
  */
 public class benchmarkSerializationPerformance {
     Long startTimestamp = time();
-    Integer iterations = 20;
-    Integer subIterations = 20000;
+    Integer iterations = 5;
+    Integer subIterations = 10000;
     String prototype = "BK";
     String techStack = "Java";
 
@@ -39,13 +39,13 @@ public class benchmarkSerializationPerformance {
 
     public benchmarkSerializationPerformance() throws Exception {
         parseTestResults("read", true, SerializationType.read);
-        parseTestResults("read", false, SerializationType.read);
+        /*parseTestResults("read", false, SerializationType.read);
 
         parseTestResults("write", true, SerializationType.write);
         parseTestResults("write", false, SerializationType.write);
 
         parseTestResults("mix", true, SerializationType.mix);
-        parseTestResults("mix", false, SerializationType.mix);
+        parseTestResults("mix", false, SerializationType.mix);*/
         System.out.println("Done.");
     }
 
@@ -130,7 +130,9 @@ public class benchmarkSerializationPerformance {
 
     private ArrayList<Integer> parallelTest(final SerializationType type) throws Exception {
         ArrayList<Integer> results = new ArrayList<Integer>();
-        for(int i =0; i < iterations; i++) {
+        ArrayList<Double> StdErrors = new ArrayList<Double>();
+        int mainIterations = iterations;
+        for(int i =0; i < mainIterations; i++) {
             Long t1 = time();
             ArrayList<Thread> threads = new ArrayList<Thread>();
             for(int b = 0; b < subIterations; b++) {
@@ -145,6 +147,16 @@ public class benchmarkSerializationPerformance {
 
             for(Thread thread : threads) thread.join();
             results.add(toIntExact(time()-t1));
+            Statistics stats = new Statistics(convertIntegers(results));
+            StdErrors.add(stats.stdError());
+            System.out.println(i);
+            if (StdErrors.size() >= iterations) {
+
+                int size = StdErrors.size();
+                double errorDifference = (StdErrors.get(size-iterations+2) - StdErrors.get(size-1)) / StdErrors.get(size-iterations+2);
+                System.out.println("Error difference: " + errorDifference);
+                if (errorDifference > 0.1) mainIterations++;
+            }
         }
         return results;
     }

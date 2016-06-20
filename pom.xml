@@ -33,10 +33,7 @@
             <artifactId>jfugue</artifactId>
             <version>5.0.7</version>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations-java5</artifactId>
-        </dependency>
+
 
     </dependencies>
 
