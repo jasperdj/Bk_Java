@@ -60,8 +60,13 @@ public class httpPerformanceTest {
 
                 public void route(String[] data) throws Exception {
                     String json = data[1];
-                    if (checkRoute(data[0], new String[]{"GET", "NOTHING"})) {
-                        respond("200", "Succes");
+                    if (checkRoute(data[0], new String[]{"POST", "NOTHING"})) {
+                        try {
+                            if (json.toLowerCase().contains("true")) throw new Exception("Forced exception");
+                            respond("200", "Succes");
+                        } catch (Exception e) {
+                            respond("500", "Internal server error " + e);
+                        }
                     } else if (checkRoute(data[0], new String[]{"GET", "CPU"})) {
                         for (int i = 0; i < iteration*2; i++) {
                             Math.sqrt(random.nextDouble() * i);

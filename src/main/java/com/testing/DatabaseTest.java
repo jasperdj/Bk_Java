@@ -8,10 +8,14 @@ import com.routeHelpers.dataTypes.EventData;
  */
 public class DatabaseTest {
     public static void main(String[] arg) {
-        Database database = new Database();
+        Database database = Database.getInstance();
         database.insertEvent(new EventData().set(3, 3, 1));
         System.out.println("Amount of spaces: " + database.getSpaceStats(3));
         database.insertEvent(new EventData().set(3,3,4));
         System.out.println("Amount of likes" + database.getMessageStats(3));
     }
+
+
+
+
 }

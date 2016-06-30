@@ -14,11 +14,6 @@ import com.routeHelpers.RouteRequest;
 import com.routeHelpers.dataTypes.EventData;
 import com.routeHelpers.dataTypes.MessageData;
 import com.routeHelpers.dataTypes.SpaceData;
-import com.audio.PlaySound;
-
-/**
- * Created by a623557 on 23-5-2016.
- */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Routes implements Runnable {
@@ -26,9 +21,6 @@ public class Routes implements Runnable {
     Database database;
     ObjectMapper mapper = new ObjectMapper();
 
-    /*
-        JMX
-     */
     public void route(String[] data) throws IOException {
         String json = data[1];
         if (checkRoute(data[0], new String[]{"POST", "bk_java", "insert"})) {
@@ -38,7 +30,7 @@ public class Routes implements Runnable {
                 new RouteRequest(json, "insert", clientSocket, "Event added.");
             else
                 respond("500", "Event could not be added.");
-
+        }
         } else if(checkRoute(data[0], new String[]{"POST", "bk_java", "spaceStatistics"})) {
             SpaceData space = mapper.readValue(json, SpaceData.class);
             Long spaceStats = database.getSpaceStats(space.getSpaceId());
@@ -115,8 +107,12 @@ public class Routes implements Runnable {
     public void run() {
         try {
             route(getHttpData());
+            return;
         } catch (IOException e) {
             System.err.println("Error #1: " + e);
+            try { clientSocket.close(); } catch(Exception d) {
+                System.out.println("Cant close clientsocket! + " + d);
+            }
         }
     }
 }

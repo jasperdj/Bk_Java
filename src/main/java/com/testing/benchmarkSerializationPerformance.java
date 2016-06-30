@@ -21,8 +21,8 @@ import static java.lang.Math.toIntExact;
  */
 public class benchmarkSerializationPerformance {
     Long startTimestamp = time();
-    Integer iterations = 5;
-    Integer subIterations = 10000;
+    Integer iterations = 10;
+    Integer subIterations = 20000;
     String prototype = "BK";
     String techStack = "Java";
 
@@ -39,13 +39,13 @@ public class benchmarkSerializationPerformance {
 
     public benchmarkSerializationPerformance() throws Exception {
         parseTestResults("read", true, SerializationType.read);
-        /*parseTestResults("read", false, SerializationType.read);
+        parseTestResults("read", false, SerializationType.read);
 
         parseTestResults("write", true, SerializationType.write);
         parseTestResults("write", false, SerializationType.write);
 
         parseTestResults("mix", true, SerializationType.mix);
-        parseTestResults("mix", false, SerializationType.mix);*/
+        parseTestResults("mix", false, SerializationType.mix);
         System.out.println("Done.");
     }
 
@@ -77,17 +77,21 @@ public class benchmarkSerializationPerformance {
         try {
             switch (type) {
                 case read:
-                    read(getJson());
+                    read(getBadJson());
                     break;
                 case write:
-                    write(getEventData());
+                    write(getBadEventData());
                     break;
                 case mix:
-                    mix(getEventData());
+                    mix(getBadEventData());
                     break;
             }
         } catch(Exception e) { System.out.println("Error: " + e); }
     }
+
+    public String getBadJson() {return "{adfewfef:gwgwgw,ghwh?(*}}"; }
+
+    public EventData getBadEventData() throws Exception { throw new Exception("Forced error"); }
 
     public static int[] convertIntegers(List<Integer> integers)
     {
@@ -109,8 +113,9 @@ public class benchmarkSerializationPerformance {
 
         Statistics stats = new Statistics(convertIntegers(data));
         String[] rowData = new String[]{iterations.toString(), subIterations.toString(), prototype, techStack,
-        name, parallel.toString(), stats.min().toString(), stats.mean().toString(), stats.median().toString(),
-        stats.max().toString(), stats.stdError().toString()};
+        name, parallel.toString(), stats.min().toString(), Integer.valueOf(stats.get25percentile()).toString(), Double.valueOf(stats.mean()).toString(),
+                Double.valueOf(stats.median()).toString(), Integer.valueOf(stats.get75percentile()).toString(),
+                Integer.valueOf(stats.get99percentile()).toString(), stats.stdError().toString()};
 
         String rowDataString = String.join(",", rowData) + "\n";
         Files.write(Paths.get("serializationBenchmark.txt"), rowDataString.getBytes(), StandardOpenOption.APPEND);
@@ -155,7 +160,7 @@ public class benchmarkSerializationPerformance {
                 int size = StdErrors.size();
                 double errorDifference = (StdErrors.get(size-iterations+2) - StdErrors.get(size-1)) / StdErrors.get(size-iterations+2);
                 System.out.println("Error difference: " + errorDifference);
-                if (errorDifference > 0.1) mainIterations++;
+                if (errorDifference > 0.2) mainIterations++;
             }
         }
         return results;

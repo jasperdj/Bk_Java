@@ -11,9 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by a623557 on 23-5-2016.
- */
 public class Monitor implements Runnable {
     private static Monitor instance = null;
 

@@ -3,16 +3,10 @@ package com.db;
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.InsertOneOptions;
 import com.routeHelpers.dataTypes.EventData;
-
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-/**
- * Created by a623557 on 24-5-2016.
- */
 public class Database {
     MongoClient mongoClient;
     MongoDatabase db;
@@ -89,28 +83,3 @@ public class Database {
         return col.count(getLikes) - col.count(getUnlikes);
     }
 }
-
-
-
-/*
-
-Benchmark {
-  technologyStack: String = Java
-  prototype:String = Bk_Java
-  timestampStart: Long
-  benchmarkDuration: Int
-  queryBenchmarks: {
-    queryBenchmark: {
-
-    }
-  }
-}
-
-
-
-
- */
-
-
-
-

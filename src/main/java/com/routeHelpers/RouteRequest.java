@@ -6,17 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.routeHelpers.dataTypes.BenchmarkInput;
 import com.routeHelpers.dataTypes.BenchmarkOutput;
 import com.routeHelpers.dataTypes.OutputData;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-/**
- * Created by a623557 on 25-5-2016.
- */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RouteRequest {
@@ -54,7 +49,7 @@ public class RouteRequest {
     private Long time() { return System.currentTimeMillis(); }
 
     private void respond(String statusCode, String response) throws IOException {
-        clientSocket.getOutputStream().write(("HTTP/1.1 "+statusCode+" OK\r\n\r\n" + response).getBytes("UTF-8"));
+        clientSocket.getOutputStream().write(("HTTP/1.1 "+statusCode+" \r\n\r\n" + response).getBytes("UTF-8"));
     }
 
     public Map<String, Long> fillAndCreateUnitPerformance(Long t1, Long t2, Long t3) {
